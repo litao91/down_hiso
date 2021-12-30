@@ -5,7 +5,8 @@ url_template = 'https://bs-cdn-video.highso.com.cn/4381705evodtranscq1500000473/
 if __name__ == "__main__":
     infile = sys.argv[1]
     dir = sys.argv[2]
-    os.mkdir(dir)
+    if not os.path.exists(dir):
+        os.mkdir(dir)
 
     with open(infile, 'r') as f:
         lines = f.readlines()
@@ -16,7 +17,10 @@ if __name__ == "__main__":
             name = item[0]
             id = item[1].split('/')[-2]
             dest_dir = dir + '/' + name
-            os.mkdir(dest_dir)
+            if not os.path.exists(dest_dir):
+                os.mkdir(dest_dir)
+            else:
+                continue
             for i in range(1, 10000):
                 url = url_template.format(id=id, num=i)
                 try:
@@ -28,4 +32,5 @@ if __name__ == "__main__":
                         ff.write(r.content);
                 except:
                     break
+            print(name + ' done')
     
