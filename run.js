@@ -51,7 +51,7 @@ async function handleItem(item, context) {
   var sessions = ["会计", "财管", "审计", "税法", "经济法", "战略"];
   for (var i = 0; i < sessions.length; i++) {
     await page.click('text="' + sessions[i] + '"');
-    await sleep(2000);
+    await sleep(5000);
     console.log(sessions[i] + ' clicked');
     var items = await page.$$('text="开始学习"')
     var items_c = await page.$$('text="继续学习"')
