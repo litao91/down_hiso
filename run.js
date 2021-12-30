@@ -63,7 +63,6 @@ async function handleItem(item, context) {
       var item = items[j];
       await handleItem(item, context);
     }
-    break;
   }
   await page.close();
 })();
