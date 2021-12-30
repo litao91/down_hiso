@@ -11,6 +11,8 @@ if __name__ == "__main__":
         lines = f.readlines()
         for l in lines:
             item = l.split('|')
+            if len(item) != 2:
+                continue
             name = item[0]
             id = item[1].split('/')[-2]
             dest_dir = dir + '/' + name
@@ -19,6 +21,8 @@ if __name__ == "__main__":
                 url = url_template.format(id=id, num=i)
                 try:
                     r = requests.get(url, allow_redirects=True)
+                    if r.status_code == 404:
+                        break
                     dest_file = dest_dir + '/' + str(i) + '.ts'
                     with open(dest_file, 'wb') as ff:
                         ff.write(r.content);
