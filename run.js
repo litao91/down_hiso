@@ -9,14 +9,15 @@ async function handleInnerItem(inner, context) {
   var parent = await inner.$('xpath=..');
   var title = (await parent.innerText()).split("\n")[1];
   await inner.click();
+  await sleep(5000);
   var page = context.pages()[context.pages().length - 1];
-  var download_audio = await page.$('text="下载音频"');
-  await download_audio.click()
+  await page.click('text="下载音频"');
+  await sleep(5000);
   var page_audio = context.pages()[context.pages().length - 1];
   var url = await page_audio.url()
   console.log(title + "|" + url)
-  page.close();
-  page_audio.close();
+  await page_audio.close();
+  await page.close();
 
 }
 
@@ -24,6 +25,7 @@ async function handleItem(item, context) {
   var parent = (await item.$('xpath=..'));
   var title = (await parent.innerText()).split("\n")[0];
   await item.click();
+  await sleep(5000);
   var pages = context.pages()
   var inner_page = pages[pages.length - 1];
 
@@ -32,7 +34,7 @@ async function handleItem(item, context) {
     var item_inner = items_inner[i];
     await handleInnerItem(item_inner, context);
   }
-  inner_page.close();
+  await inner_page.close();
 
 }
 
@@ -49,7 +51,6 @@ async function handleItem(item, context) {
   for (var i = 0; i < sessions.length; i++) {
     await page.click('text="' + sessions[i] + '"');
     console.log(sessions[i] + ' clicked');
-    sleep(10000);
     var items = await page.$$('text="开始学习"')
     var items_c = await page.$$('text="继续学习"')
     for (var j = 0; j < items_c.length; j++) {
@@ -63,5 +64,5 @@ async function handleItem(item, context) {
     }
     break;
   }
-  page.close();
+  await page.close();
 })();
