@@ -39,7 +39,8 @@ async function handleItem(item, context) {
 }
 
 (async () => {
-  const browser = await chromium.launch({ headless: false, devtools: true });
+  // const browser = await chromium.launch({ headless: false, devtools: true });
+  const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('https://www.haixue.com/v5/login');
@@ -50,6 +51,7 @@ async function handleItem(item, context) {
   var sessions = ["会计", "财管", "审计", "税法", "经济法", "战略"];
   for (var i = 0; i < sessions.length; i++) {
     await page.click('text="' + sessions[i] + '"');
+    await sleep(2000);
     console.log(sessions[i] + ' clicked');
     var items = await page.$$('text="开始学习"')
     var items_c = await page.$$('text="继续学习"')
@@ -60,7 +62,6 @@ async function handleItem(item, context) {
     for (var j = 0; j < items.length; j++) {
       var item = items[j];
       await handleItem(item, context);
-      break;
     }
     break;
   }
