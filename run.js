@@ -9,10 +9,10 @@ async function handleInnerItem(inner, context) {
   var parent = await inner.$('xpath=..');
   var title = (await parent.innerText()).split("\n")[1];
   await inner.click();
-  await sleep(5000);
+  await sleep(2000);
   var page = context.pages()[context.pages().length - 1];
   await page.click('text="下载音频"');
-  await sleep(5000);
+  await sleep(2000);
   var page_audio = context.pages()[context.pages().length - 1];
   var url = await page_audio.url()
   console.log(title + "|" + url)
@@ -25,7 +25,7 @@ async function handleItem(item, context) {
   var parent = (await item.$('xpath=..'));
   var title = (await parent.innerText()).split("\n")[0];
   await item.click();
-  await sleep(5000);
+  await sleep(2000);
   var pages = context.pages()
   var inner_page = pages[pages.length - 1];
 
@@ -48,10 +48,10 @@ async function handleItem(item, context) {
   await page.fill('input[type="password"]', "lmj19910523!");
   await page.click("button");
 
-  var sessions = ["会计", "财管", "审计", "税法", "经济法", "战略"];
+  var sessions = ["战略"];
   for (var i = 0; i < sessions.length; i++) {
     await page.click('text="' + sessions[i] + '"');
-    await sleep(5000);
+    await sleep(2000);
     console.log(sessions[i] + ' clicked');
     var items = await page.$$('text="开始学习"')
     var items_c = await page.$$('text="继续学习"')
@@ -65,4 +65,5 @@ async function handleItem(item, context) {
     }
   }
   await page.close();
+  await browser.close();
 })();
