@@ -30,6 +30,10 @@ async function handleItem(item, context) {
   var inner_page = pages[pages.length - 1];
 
   var items_inner = await inner_page.$$('text="开始学习"');
+  var items_inner_c = await inner_page.$$('text="继续学习"');
+  for (var i = 0; i < items_inner_c.length; i++) {
+    items_inner.push(items_inner_c[i]);
+  }
   for (var i = 0; i < items_inner.length; i++) {
     var item_inner = items_inner[i];
     await handleInnerItem(item_inner, context);
