@@ -11,14 +11,15 @@ async function handleInnerItem(inner, context) {
   await inner.click();
   await sleep(2000);
   var page = context.pages()[context.pages().length - 1];
-  await page.click('text="下载音频"');
-  await sleep(2000);
-  var page_audio = context.pages()[context.pages().length - 1];
-  var url = await page_audio.url()
-  console.log(title + "|" + url)
-  await page_audio.close();
-  await page.close();
-
+  let url = await page.url();
+  page.on('request', request =>{
+    var req_url = request.url();
+    if (req_url.indexOf("flv") != -1) {
+      console.log(title + "|" + req_url);
+    }
+  });
+  page.goto(url);
+  await sleep(5000)
 }
 
 async function handleItem(item, context) {
@@ -39,8 +40,8 @@ async function handleItem(item, context) {
 }
 
 (async () => {
-  // const browser = await chromium.launch({ headless: false, devtools: true });
-  const browser = await chromium.launch();
+  const browser = await chromium.launch({ headless: false, devtools: true });
+  // const browser = await chromium.launch();
   const context = await browser.newContext();
   const page = await context.newPage();
   await page.goto('https://www.haixue.com/v5/login');
