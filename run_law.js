@@ -40,21 +40,26 @@ async function handleInnerItem(inner, context) {
   var page = context.pages()[context.pages().length - 1];
   let url = await page.url();
   page.goto(url);
-  var video_url = 0;
+  var video_json_url = '';
   page.on('request', request => {
     var req_url = request.url();
     if (req_url.indexOf("download?csrf_token") != -1) {
-      video_url = req_url;
+      video_json_url = req_url;
     }
   });
-  await sleep(5000)
-  await page.goto(video_url);
-  var pre = await page.$("pre");
-  var text = await pre.innerText();
-  var parsed = JSON.parse(text);
-  var videoUrl = parsed.data.videoUrl
-  console.log(title + "|" + videoUrl);
-  download(videoUrl, "law_downloaded/" + title + ".mp4", function() {});
+  for (var i = 0; i < 10; i++) {
+    await sleep(5000)
+    if (video_json_url.indexOf("http")!=-1) {
+      await page.goto(video_json_url);
+      var pre = await page.$("pre");
+      var text = await pre.innerText();
+      var parsed = JSON.parse(text);
+      var videoUrl = parsed.data.videoUrl
+      console.log(title + "|" + videoUrl);
+      download(videoUrl, "law_downloaded/" + title + ".mp4", function() { });
+      break;
+    }
+  }
   page.close()
 }
 
@@ -108,4 +113,6 @@ async function handleItem(item, context) {
   }
   await page.close();
   await browser.close();
+  console.log("Done!");
+  await sleep(1000000);
 })();
